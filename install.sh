@@ -7,15 +7,14 @@ echo "Starting .dotfiles install"
 
 if ! command -v brew >/dev/null; then
     echo "Installing homebrew"
-    # from: https://brew.sh
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   else
     echo "Homebrew installed, skipping brew"
 fi
 
-# update homebrew
 brew update --quiet
-# a sorted list of packages to install
+
+echo "Installing brew packages"
 brew install --quiet --formula \
     colima \
     docker-compose \
@@ -30,11 +29,13 @@ brew install --quiet --formula \
     terraform \
     tree \
     vim \
+    zsh
     ;
 
+echo "Installing extras"
 brew install --cask --quiet \
-    # 1password \
-    # discord \
+    1password \
+    discord \
     iterm2 \
     obsidian \
     postman \
@@ -44,3 +45,18 @@ brew install --cask --quiet \
     visual-studio-code \
     zoom \
     ;
+
+echo "Installing oh-my-zsh"
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  else
+    echo "oh-my-zsh installed, skipping"
+fi
+
+echo "Generating SSH keypair"
+if [ ! -f "$HOME/.ssh/id_rsa" ]; then
+    ssh-keygen -t rsa -b 4096 -N '' -f "$HOME/.ssh/id_rsa" <<<y >/dev/null 2>&1
+    echo "SSH keypair generated"
+    echo "Add the following public key to your repositories:"
+    cat "$HOME/.ssh/id_rsa.pub"
+
