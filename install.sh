@@ -60,3 +60,8 @@ if [ ! -f "$HOME/.ssh/id_rsa" ]; then
     echo "Add the following public key to your repositories:"
     cat "$HOME/.ssh/id_rsa.pub"
 
+# Prettify terminal prompt
+cp terminal_tools/prettify_prompt_cmd.sh ~/.prettify_prompt_cmd
+if ! grep -Fxq "source ~/.prettify_prompt_cmd" ~/.zshrc; then
+    echo "source ~/.prettify_prompt_cmd" >> ~/.zshrc
+fi
